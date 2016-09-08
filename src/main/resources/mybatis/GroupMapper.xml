@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.GroupDao">
+    <resultMap id="GroupMap" type="com.demo.model.Group">
+        <result column="ID" property="id"  jdbcType="VARCHAR" />
+        <result column="NAME" property="name"  jdbcType="VARCHAR" />
+        <result column="DEPTID" property="deptid"  jdbcType="VARCHAR" />
+        <result column="GDESC" property="gdesc"  jdbcType="VARCHAR" />
+        <result column="groupuserid" property="groupUserid" jdbcType="VARCHAR"/>
+        <result column="groupusername" property="groupUserName" jdbcType="VARCHAR"/>
+          <result column="GROUPXD" property="groupxd" jdbcType="VARCHAR" />
+        <result column="GROUPXK" property="groupxk" jdbcType="VARCHAR" />
+        <result column="GROUPNJ" property="groupnj" jdbcType="VARCHAR" />
+        <result column="groupimg" property="groupImg" jdbcType="VARCHAR"/>
+       
+    </resultMap>   
+    
+    <sql id="Base_Column_List">
+         ID as id,
+         NAME as name,
+         DEPTID as deptid,
+         GDESC as gdesc,
+         GROUPXD as groupxd,
+         GROUPXK as groupxk,
+         GROUPNJ as groupnj,
+         GROUPIMG as groupImg,
+         REMARK1 as remark1,
+         REMARK2 as remark2,
+         REMARK3 as remark3
+    </sql>
+
+    <sql id="Base_Where_Clause">
+        <where>
+            <trim prefixOverrides="and|or">
+                <if test="id != null"> and ID = #{id}</if>
+                <if test="name != null and name != '' "> and NAME like '%${name}%' </if>
+                <if test="deptid != null"> and DEPTID = #{deptid}</if>
+                <if test="gdesc != null"> and GDESC = #{gdesc}</if>
+                <if test="departids != null">
+                    and DEPTID in 
+                    <foreach item="item" index="index" collection="departids" open="(" separator="," close=")" >
+                        #{item}
+                    </foreach>
+                </if>
+            </trim>
+        </where>
+        <if test="page != null">
+            limit ${page.First}, ${page.Pagesize}
+        </if>
+    </sql> 
+ <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Long">
+ 
+ select count(id) from x_group_tab
+		<include refid="Base_Where_Clause" />
+ </select>
+  
+ <select id="selectList" resultMap="GroupMap">
+  select <include refid="Base_list"></include> from x_group_tab
+ 
+ </select>
+ <sql id="Base_list">
+ id as id,
+ name as name,
+ gdesc as gdesc,
+ deptid as deptid
+ 
+ </sql>  
+ 
+    <delete id="deleteById" parameterType="java.lang.String">
+    delete   from x_group_tab where id=#{id}
+    </delete>
+  <insert id="insert" parameterType="com.demo.model.Group">
+        insert into X_GROUP_TAB(
+            ID,
+            NAME,
+            DEPTID,
+            GDESC,
+            GROUPXD,
+            GROUPXK,
+            GROUPNJ,
+            GROUPIMG,
+            REMARK1,
+            REMARK2,
+            REMARK3
+        )
+        values(
+            #{id,jdbcType=VARCHAR},
+            #{name,jdbcType=VARCHAR},
+            #{deptid,jdbcType=VARCHAR},
+            #{gdesc,jdbcType=VARCHAR},
+            #{groupxd,jdbcType=VARCHAR},
+            #{groupxk,jdbcType=VARCHAR},
+            #{groupnj,jdbcType=VARCHAR},
+            #{groupImg,jdbcType=VARCHAR},
+            #{remark1,jdbcType=VARCHAR},
+            #{remark2,jdbcType=VARCHAR},
+            #{remark3,jdbcType=VARCHAR}
+        )       
+    </insert>
+ 
+  <update id="updateById" parameterType="com.demo.model.Group">
+        update X_GROUP_TAB 
+        set NAME=           #{name,jdbcType=VARCHAR},
+        DEPTID=         #{deptid,jdbcType=VARCHAR},
+        GDESC=          #{gdesc,jdbcType=VARCHAR},
+        GROUPXD=            #{groupxd,jdbcType=VARCHAR},
+        GROUPXK=            #{groupxk,jdbcType=VARCHAR},
+        GROUPNJ=            #{groupnj,jdbcType=VARCHAR},
+        GROUPIMG=           #{groupimg,jdbcType=VARCHAR},
+        REMARK1=            #{remark1,jdbcType=VARCHAR},
+        REMARK2=            #{remark2,jdbcType=VARCHAR},
+        REMARK3=            #{remark3,jdbcType=VARCHAR}
+        where id = #{id}
+    </update>
+
+    <update id="updateByIdSelective" parameterType="com.demo.model.Group">
+        update X_GROUP_TAB 
+        <set>
+            <if test="name != null">NAME = #{name,jdbcType=VARCHAR},</if>
+            <if test="deptid != null">DEPTID = #{deptid,jdbcType=VARCHAR},</if>
+            <if test="gdesc != null">GDESC = #{gdesc,jdbcType=VARCHAR},</if>
+            <if test="groupxd != null">GROUPXD = #{groupxd,jdbcType=VARCHAR},</if>
+            <if test="groupxk != null">GROUPXK = #{groupxk,jdbcType=VARCHAR},</if>
+            <if test="groupnj != null">GROUPNJ = #{groupnj,jdbcType=VARCHAR},</if>
+            <if test="groupImg != null">GROUPIMG = #{groupImg,jdbcType=VARCHAR},</if>
+            <if test="remark1 != null">REMARK1 = #{remark1,jdbcType=VARCHAR},</if>
+            <if test="remark2 != null">REMARK2 = #{remark2,jdbcType=VARCHAR},</if>
+            <if test="remark3 != null">REMARK3 = #{remark3,jdbcType=VARCHAR},</if>
+        </set>
+        where id = #{id}
+    </update>
+ 
+</mapper>
